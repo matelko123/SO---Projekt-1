@@ -1,12 +1,15 @@
 # Prerequisites
 *.d
+out
+.vscode
+.history
+psychologia-milosci_done.txt
 
 # Compiled Object files
 *.slo
 *.lo
 *.o
 *.obj
-out
 
 # Precompiled Headers
 *.gch
