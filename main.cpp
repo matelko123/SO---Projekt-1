@@ -11,7 +11,9 @@ using namespace std;
 
 /* TODO
  ✅ Stworzyć funkcje do sprawdzania plikow a gdy plik nie istnieje to go tworzy
- * Poprawiać stringi aby nie miały znakow specjalnych
+ ✅ Poprawiać stringi aby nie miały znakow specjalnych
+ * Dodać więcej znakow specjalnych
+ * Sortowanie
  */
 
 // -------------------------------------------------
@@ -31,18 +33,11 @@ void initFileStream(fstream &plik, string fileName){
 }
 
 bool isCharAlpha(const char &c){
-    char znaki[] = {'.', ',', '\'', '"', '!', '?', '>', '<', '\\', '(', ')', ':', ';', '-', '_', '+', '=', '/'};
+    char znaki[] = {'.', ',', '\'', '"', '!', '?', '>', '<', '\\', '(', ')', ':', ';', '-', '_', '+', '=', '/', '*'};
     int length = sizeof(znaki)/sizeof(znaki[0]);
 
     for(int i=0; i<length; i++)
         if(c == znaki[i] || isdigit(c)) return false;
-        
-    return true;
-}
-
-bool isStringAlpha(const string &str){
-    for(int i=0; i<str.length(); i++)
-        if(!isCharAlpha(str[i])) return false;
         
     return true;
 }
@@ -62,12 +57,13 @@ void prepareString(string &str){
     trim(str);                                                  // Trim string
     transform(str.begin(), str.end(),str.begin(), ::toupper);   // String to upper case
 
+    int i=0;
+    while(!isCharAlpha(str[i]) && i<str.length()) i++;
+
     int j=0;
     while(isCharAlpha(str[j]) && j<str.length()) j++;
 
-    //cout<<str<<" "<<str.length()<<" "<<i<<" "<<j<<": "<<str.substr(i, j)<<endl;
-
-    str = str.substr(0, j);
+    str = str.substr(i, j);
 }
 
 void prepareFile(fstream &org, fstream &plik){
@@ -78,6 +74,20 @@ void prepareFile(fstream &org, fstream &plik){
         prepareString(tmp);
         if(tmp.length() > 0) plik<<tmp<<endl;
     }
+}
+
+int countStringInFile(fstream &plik){
+    if(!plik) throwError(1, "Corrupted file");
+    
+    plik.seekg(0);
+
+    int count = 0;
+    do {
+         count++;
+    }
+    while(!plik.eof());
+
+    return count;
 }
 
 int main(){
