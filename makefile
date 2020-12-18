@@ -1,6 +1,6 @@
-all: clean
+all: clean main.cpp fileHelper.cpp
 	clear
-	g++ main.cpp -o out
+	g++ -o out main.cpp fileHelper.cpp
 	./out
 
 clean:
