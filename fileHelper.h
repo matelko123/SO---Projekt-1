@@ -18,8 +18,10 @@ void trim(string &str);
 
 void prepareString(string &str);
 
-void prepareFile(fstream &org, fstream &plik);
+void loadDataFromFile(fstream &plik, string tab[], unsigned int rozm);
 
-int countStringInFile(fstream &plik);
+int getMaxLength(const string tab[], const unsigned int rozm);
+
+int getCountOfWords(fstream &plik);
 
 #endif // __FILEHELPER_H__

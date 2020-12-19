@@ -1,8 +1,8 @@
 all: clean main.cpp fileHelper.cpp
 	clear
-	g++ -o out main.cpp fileHelper.cpp
-	./out
+	g++ -o main main.cpp fileHelper.cpp
+	./main
 
 clean:
-	rm -rf out *.o
+	rm -rf main *.o
 	clear

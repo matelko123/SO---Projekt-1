@@ -1,33 +1,93 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <algorithm>
-#include <cctype>
+#include <vector>
 #include "fileHelper.h"
-#define orgFileName "psychologia-milosci.txt"
-#define endFileName "psychologia-milosci_done.txt"
+#define FileName "psychologia-milosci.txt"
+#define DoneFileName "psychologia-milosci_done.txt"
 
 using namespace std;
 
 /* TODO
  ✅ Stworzyć funkcje do sprawdzania plikow a gdy plik nie istnieje to go tworzy
  ✅ Poprawiać stringi aby nie miały znakow specjalnych
- ✅ Dodać więcej znakow specjalnych
+ * Dodać więcej znakow specjalnych
  * Poprawić MAKEFILE
  * Sortowanie
  */
 
+// void countSort(string tab[], int rozm, int exp){
+//     string *out = new string[rozm];
+//     int i=0;
+//     int count[26]={0};
+
+//     for (int i = 0; i < rozm; i++){   
+//         string tmp = tab[i];
+//         char znak = tmp[exp];
+//         count[znak-65]++;
+//     }
+
+//     for (int i = 1; i < 26; i++)
+//     {
+//         count[i] += count[i-1];
+//     }
+
+//     for (int i = rozm - 1; i >= 0; i--)
+//     {
+//         string tmp = tab[i];
+//         char znak = tmp[exp];
+//         out[count[znak-65]-1] = tab[i];
+//         count[znak-65]--;
+//     }
+    
+//     for (int i = 0; i < rozm; i++)
+//         tab[i] = out[i];
+// }
+
+// void radixSort(string tab[], int rozm){
+//     int m = getMaxLength(tab, rozm);
+
+//     for (int i = 0; i < rozm; i++)
+//     {
+//         countSort(tab, rozm, i);
+//     }
+// }
+
+void saveData(fstream &plik, string tab[], int rozm){
+    if(!plik) throwError(1, "Corrupted file");
+    plik.seekg(0);
+
+    for (int i = 0; i < rozm; i++)
+        plik<<tab[i]<<endl;
+}
+
+/* ------------- PRZEBIEG ------------- *\
+ * 1. Załadowanie słow z pliku do tablicy
+ * 2. Sortowanie radix sortem
+ * 3. Zapis danych do pliku
+ */
+
 int main(){
-    fstream org;
-    initFileStream(org, orgFileName);
-
     fstream plik;
-    remove(endFileName);
-    initFileStream(plik, endFileName);
+    initFileStream(plik, FileName);
+    
+    unsigned int rozm = getCountOfWords(plik);
 
-    prepareFile(org, plik);
+    if(!plik) throwError(1, "Corrupted file11");
+    cout<<"Allocating memory for "<<rozm<<" strings.."<<endl;
+    string *tab = new string[rozm];
+    if(tab==NULL) throwError(2, "Allocation error");
+    
+    loadDataFromFile(plik, tab, rozm);
 
-    org.close();
+    fstream done;
+    initFileStream(done, DoneFileName);
+    // radixSort(tab, rozm);
+    saveData(done, tab, rozm);
+    // cout<<tab[0]<<endl;
+
+    // cout<<getMaxLength(tab, rozm)<<endl;
+
     plik.close();
     return 0;
 }

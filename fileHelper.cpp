@@ -1,4 +1,6 @@
 #include "fileHelper.h"
+#include <string>
+#include <vector>
 
 void throwError(int status=1, string msg="Some error"){
     cout<<msg<<endl;
@@ -7,11 +9,9 @@ void throwError(int status=1, string msg="Some error"){
 
 void initFileStream(fstream &plik, string fileName){
     plik.open(fileName);
-    if(!plik || !plik.is_open()){
-        plik.open(fileName, fstream::out);
-        if(!plik || !plik.is_open())
-            throwError(1, "Unable to open the file: " + fileName);
-    }
+    if(!plik || !plik.is_open())
+        throwError(1, "Unable to open the file: " + fileName);
+    
 }
 
 bool isCharAlpha(const char &c){
@@ -33,6 +33,17 @@ void trim(string &str){
     str = str.substr(first, (last - first + 1));
 }
 
+int getMaxLength(const string tab[], const unsigned int rozm){
+    int mx = 0;
+    
+    for(int i=0; i<rozm; i++){
+        int len = tab[i].length();
+        if(len > mx) mx = len;
+    }
+
+    return mx;
+}
+
 // -------------------------------------------------
 
 void prepareString(string &str){
@@ -42,33 +53,44 @@ void prepareString(string &str){
     int i=0;
     while(!isCharAlpha(str[i]) && i<str.length()) i++;
 
-    int j=0;
+    int j=i;
     while(isCharAlpha(str[j]) && j<str.length()) j++;
 
     str = str.substr(i, j);
 }
 
-void prepareFile(fstream &org, fstream &plik){
-    if(!org || !plik) throwError(1, "Corrupted file");
-
-    string tmp;
-    while(org>>tmp){
-        prepareString(tmp);
-        if(tmp.length() > 0) plik<<tmp<<endl;
-    }
-}
-
-int countStringInFile(fstream &plik){
+void loadDataFromFile(fstream &plik, string tab[], unsigned int rozm){
     if(!plik) throwError(1, "Corrupted file");
-    
     plik.seekg(0);
 
-    int count = 0;
-    do {
-         count++;
-    }
-    while(!plik.eof());
+    int i = 0;
+    string tmp;
 
-    return count;
+    while(!plik.eof()){
+        plik>>tmp;
+        prepareString(tmp);
+        if(tmp.length() > 0) {
+            //cout<<tmp<<",\t";
+            tab[i++] = tmp;
+        }
+    }
 }
 
+int getCountOfWords(fstream &plik){
+    if(!plik) throwError(1, "Corrupted file");
+    plik.seekg(0);
+
+    int counter = 0;
+    string tmp;
+
+    plik.seekg(0);
+    while(!plik.eof()){
+        plik>>tmp;
+        prepareString(tmp);
+        if(tmp.length() > 0) {
+            // cout<<tmp<<",\t";
+            counter++;
+        }
+    }
+    return counter;
+}
