@@ -22,33 +22,22 @@ void countSort(string tab[], int rozm, int exp){
     int count[26] = {0};
 
     for (int i = 0; i < rozm; i++){
-        if(exp <= tab[i].length()){
-            string tmp = tab[i];
-            char znak = tmp[exp];
-            count[znak-65]++;
-        }
+        string tmp = tab[i];
+        char znak = (exp < tmp.length())? tmp[exp]: 'A';
+        count[znak-65]++;
     }
-
-    // for (int i = 0; i < 26; i++)
-    //     cout<<i<<": "<<count[i]<<endl;
 
     for (int i = 1; i < 26; i++)
         count[i] += count[i-1];
 
-    // for (int i = 0; i < 26; i++)
-    //     cout<<i<<": "<<count[i]<<endl;
 
     for (int i = rozm - 1; i >= 0; i--) {
-        if(exp <= tab[i].length()-1){
-            string tmp = tab[i];
-            char znak = tmp[exp];
-            int idx = count[znak-65];
-            //cout<<i<<" "<<tmp<<" "<<znak<<": "<<idx<<endl;
-            out[idx-1] = tab[i];
-            count[znak-65]--;
-        }
+        string tmp = tab[i];
+        char znak = (exp < tmp.length())? tmp[exp]: 'A';
+        int idx = count[znak-65];
+        out[idx-1] = tab[i];
+        count[znak-65]--;
     }
-    cout<<out[0]<<" "<<out[3]<<endl;
 
     for (int i = 0; i < rozm; i++)
         tab[i] = out[i];
