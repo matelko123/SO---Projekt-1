@@ -16,42 +16,43 @@ using namespace std;
  * Sortowanie
  */
 
-// void countSort(string tab[], int rozm, int exp){
-//     string *out = new string[rozm];
-//     int i=0;
-//     int count[26]={0};
+void countSort(string tab[], int rozm, int exp){
+    string *out = new string[rozm];
+    int i = 0;
+    int count[26] = {0};
 
-//     for (int i = 0; i < rozm; i++){   
-//         string tmp = tab[i];
-//         char znak = tmp[exp];
-//         count[znak-65]++;
-//     }
+    for (int i = 0; i < rozm; i++){
+        if(exp <= tab[i].length()){
+            string tmp = tab[i];
+            char znak = tmp[exp];
+            count[znak-65]++;
+        }
+    }
 
-//     for (int i = 1; i < 26; i++)
-//     {
-//         count[i] += count[i-1];
-//     }
+    // for (int i = 0; i < 26; i++)
+    //     cout<<i<<": "<<count[i]<<endl;
 
-//     for (int i = rozm - 1; i >= 0; i--)
-//     {
-//         string tmp = tab[i];
-//         char znak = tmp[exp];
-//         out[count[znak-65]-1] = tab[i];
-//         count[znak-65]--;
-//     }
-    
-//     for (int i = 0; i < rozm; i++)
-//         tab[i] = out[i];
-// }
+    for (int i = 1; i < 26; i++)
+        count[i] += count[i-1];
 
-// void radixSort(string tab[], int rozm){
-//     int m = getMaxLength(tab, rozm);
+    // for (int i = 0; i < 26; i++)
+    //     cout<<i<<": "<<count[i]<<endl;
 
-//     for (int i = 0; i < rozm; i++)
-//     {
-//         countSort(tab, rozm, i);
-//     }
-// }
+    for (int i = rozm - 1; i >= 0; i--) {
+        if(exp <= tab[i].length()-1){
+            string tmp = tab[i];
+            char znak = tmp[exp];
+            int idx = count[znak-65];
+            //cout<<i<<" "<<tmp<<" "<<znak<<": "<<idx<<endl;
+            out[idx-1] = tab[i];
+            count[znak-65]--;
+        }
+    }
+    cout<<out[0]<<" "<<out[3]<<endl;
+
+    for (int i = 0; i < rozm; i++)
+        tab[i] = out[i];
+}
 
 void saveData(fstream &plik, string tab[], int rozm){
     if(!plik) throwError(1, "Corrupted file");
@@ -59,6 +60,15 @@ void saveData(fstream &plik, string tab[], int rozm){
 
     for (int i = 0; i < rozm; i++)
         plik<<tab[i]<<endl;
+}
+
+void radixSort(string tab[], int rozm){
+    int m = getMaxLength(tab, rozm);
+
+    for (int i = 0; i < m; i++)
+    {
+        countSort(tab, rozm, i);
+    }
 }
 
 /* ------------- PRZEBIEG ------------- *\
@@ -73,7 +83,6 @@ int main(){
     
     unsigned int rozm = getCountOfWords(plik);
 
-    if(!plik) throwError(1, "Corrupted file11");
     cout<<"Allocating memory for "<<rozm<<" strings.."<<endl;
     string *tab = new string[rozm];
     if(tab==NULL) throwError(2, "Allocation error");
@@ -82,11 +91,8 @@ int main(){
 
     fstream done;
     initFileStream(done, DoneFileName);
-    // radixSort(tab, rozm);
+    radixSort(tab, rozm);
     saveData(done, tab, rozm);
-    // cout<<tab[0]<<endl;
-
-    // cout<<getMaxLength(tab, rozm)<<endl;
 
     plik.close();
     return 0;

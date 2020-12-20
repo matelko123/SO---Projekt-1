@@ -1,6 +1,6 @@
 all: clean main.cpp fileHelper.cpp
 	clear
-	g++ -o main main.cpp fileHelper.cpp
+	g++ -pthread -std=c++17 -o main main.cpp fileHelper.cpp
 	./main
 
 clean:

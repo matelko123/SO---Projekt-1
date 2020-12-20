@@ -14,16 +14,6 @@ void initFileStream(fstream &plik, string fileName){
     
 }
 
-bool isCharAlpha(const char &c){
-    char znaki[] = {'.', ',', '\'', '"', '!', '?', '>', '<', '\\', '(', ')', ':', ';', '-', '_', '+', '=', '/', '*'};
-    int length = sizeof(znaki)/sizeof(znaki[0]);
-
-    for(int i=0; i<length; i++)
-        if(c == znaki[i] || isdigit(c)) return false;
-        
-    return true;
-}
-
 void trim(string &str){
     size_t first = str.find_first_not_of(' ');
     if (string::npos == first)
@@ -46,17 +36,22 @@ int getMaxLength(const string tab[], const unsigned int rozm){
 
 // -------------------------------------------------
 
+bool isCharAlpha(const char &c){
+    if(c >= 'A' && c <= 'Z') return true;
+    else return false;
+}
+
 void prepareString(string &str){
     trim(str);                                                  // Trim string
     transform(str.begin(), str.end(),str.begin(), ::toupper);   // String to upper case
 
     int i=0;
-    while(!isCharAlpha(str[i]) && i<str.length()) i++;
+    while(!isCharAlpha(str[i]) && i<str.length())i++;
 
     int j=i;
     while(isCharAlpha(str[j]) && j<str.length()) j++;
 
-    str = str.substr(i, j);
+    str = str.substr(i, j-i);
 }
 
 void loadDataFromFile(fstream &plik, string tab[], unsigned int rozm){
@@ -70,7 +65,6 @@ void loadDataFromFile(fstream &plik, string tab[], unsigned int rozm){
         plik>>tmp;
         prepareString(tmp);
         if(tmp.length() > 0) {
-            //cout<<tmp<<",\t";
             tab[i++] = tmp;
         }
     }

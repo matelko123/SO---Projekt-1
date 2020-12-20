@@ -1,6 +1,6 @@
 # Prerequisites
 *.d
-out
+main
 .vscode
 .history
 psychologia-milosci_done.txt
