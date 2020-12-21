@@ -2,16 +2,9 @@
 #include <string>
 #include <vector>
 
-void throwError(int status=1, string msg="Some error"){
+void throwError(int status=1, string msg="Something went wrong"){
     cout<<msg<<endl;
     exit(status);
-}
-
-void initFileStream(fstream &plik, string fileName){
-    plik.open(fileName);
-    if(!plik || !plik.is_open())
-        throwError(1, "Unable to open the file: " + fileName);
-    
 }
 
 void trim(string &str){
@@ -23,7 +16,8 @@ void trim(string &str){
     str = str.substr(first, (last - first + 1));
 }
 
-int getMaxLength(const string tab[], const unsigned int rozm){
+int getMaxLength(const string tab[], const int rozm){
+    if(!tab || rozm <= 0) throwError(3, "Incorrect data.");
     int mx = 0;
     
     for(int i=0; i<rozm; i++){
@@ -43,19 +37,19 @@ bool isCharAlpha(const char &c){
 
 void prepareString(string &str){
     trim(str);                                                  // Trim string
-    transform(str.begin(), str.end(),str.begin(), ::toupper);   // String to upper case
+    transform(str.begin(), str.end(), str.begin(), ::toupper);   // String to upper case
 
-    int i=0;
-    while(!isCharAlpha(str[i]) && i<str.length())i++;
+    int i = 0;
+    while(!isCharAlpha(str[i]) && i<str.length()) i++;
 
-    int j=i;
+    int j = i;
     while(isCharAlpha(str[j]) && j<str.length()) j++;
 
     str = str.substr(i, j-i);
 }
 
-void loadDataFromFile(fstream &plik, string tab[], unsigned int rozm){
-    if(!plik) throwError(1, "Corrupted file");
+void loadDataFromFile(fstream &plik, string tab[], const int rozm){
+    if(!plik) throwError(1, "Corrupted file.");
     plik.seekg(0);
 
     int i = 0;
@@ -64,27 +58,30 @@ void loadDataFromFile(fstream &plik, string tab[], unsigned int rozm){
     while(!plik.eof()){
         plik>>tmp;
         prepareString(tmp);
-        if(tmp.length() > 0) {
-            tab[i++] = tmp;
-        }
+        if(tmp.length() > 0) tab[i++] = tmp;
     }
 }
 
 int getCountOfWords(fstream &plik){
-    if(!plik) throwError(1, "Corrupted file");
+    if(!plik || !plik.good()) throwError(1, "Corrupted file");
     plik.seekg(0);
 
     int counter = 0;
     string tmp;
 
-    plik.seekg(0);
     while(!plik.eof()){
         plik>>tmp;
         prepareString(tmp);
-        if(tmp.length() > 0) {
-            // cout<<tmp<<",\t";
-            counter++;
-        }
+        if(tmp.length() > 0) counter++;
     }
+
     return counter;
+}
+
+void saveData(fstream &plik, string tab[], int rozm){
+    if(!plik || !plik.good()) throwError(1, "Corrupted file");
+    plik.seekg(0);
+
+    for (int i = 0; i < rozm; i++)
+        plik<<tab[i]<<endl;
 }

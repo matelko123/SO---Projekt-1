@@ -10,18 +10,18 @@ using namespace std;
 
 void throwError(int status, string msg);
 
-void initFileStream(fstream &plik, string fileName);
-
 bool isCharAlpha(const char &c);
 
 void trim(string &str);
 
 void prepareString(string &str);
 
-void loadDataFromFile(fstream &plik, string tab[], unsigned int rozm);
+void loadDataFromFile(fstream &plik, string tab[], const int rozm);
 
-int getMaxLength(const string tab[], const unsigned int rozm);
+int getMaxLength(const string tab[], const int rozm);
 
 int getCountOfWords(fstream &plik);
+
+void saveData(fstream &plik, string tab[], const int rozm);
 
 #endif // __FILEHELPER_H__
