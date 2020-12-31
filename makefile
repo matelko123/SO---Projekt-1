@@ -1,25 +1,22 @@
-CFILES   = $(wildcard *.cpp)
-OBJFILES = $(CFILES:.cpp=.o)
-OUT      = main
+SRCDIR := \src
+BINDIR := \bin
 
-CC      = g++
-CFLAGS 	= -g -Wall
+SOURCES := $(shell find $(SRCDIR) -name "*.cpp")
+OBJECTS := $(patsubst %.cpp, %.o, $(SOURCES))
 
-$(OUT): $(OBJFILES)
+CC 			:= g++
+FLAGS		:= -pedantic -Wall -Werror
+CC-FLAGS	:= $(CC) $(FLAGS)
+
+ALLFILES := $(SOURCES)
+
+.PHONY: all
+
+all: clean sts2msw
+	./out
+
+sts2msw: $(OBJECTS)
+	$(CC-FLAGS) $^ -o out
 
 clean:
-	rm -f $(OBJFILES) $(OUT)
-
-# CXX = g++
-# CFLAGS = -pthread -std=c++17 -g -Wall
-
-# target = out
-
-# all: clean main.cpp fileHelper.cpp
-# 	clear
-# 	$(CXX) $(CFLAGS) -o $(target) main.cpp fileHelper.cpp
-# 	./$(target)
-
-# clean:
-# 	rm -rf $(target) *.o
-# 	clear
+	rm -rf $(OBJECTS) out

@@ -1,14 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "fileHelper.h"
-#define FileName "_text.txt"
-#define DoneFileName "_done.txt"
+#include "./fileHelper/fileHelper.h"
+#define FileName "./src/_text.txt"
+#define DoneFileName "./src/_done.txt"
 
 using namespace std;
 
 /* TODO
- * Poprawić MAKEFILE, dodać cpp 11?
  * Poprawić funkcje i stylystyke
  */
 
@@ -52,10 +51,15 @@ int main(){
     unsigned int rozm = getCountOfWords(plik);
     cout<<"Allocating memory for "<<rozm<<" strings.."<<endl;
 
+    // Allocation string array
     string *tab = new string[rozm];
     if (tab == NULL) throwError(2, "Allocation error");
+    cout<<"Allocation successfully!"<<endl;
 
+    // Load data from file to array
+    cout<<"Loading data from file..."<<endl;
     loadDataFromFile(plik, tab, rozm);
+    cout<<"Loaded data successfully!"<<endl;
 
     fstream done;
     done.open(DoneFileName, ios::out | ios::trunc);
@@ -63,6 +67,8 @@ int main(){
 
     radixSort(tab, rozm);
     saveData(done, tab, rozm);
+
+    cout<<"Done!!"<<endl;
 
     plik.close();
     return 0;
