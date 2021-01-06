@@ -90,7 +90,7 @@ void Projekt::countSort(const int exp){
         count[znak-65]++;
     }
 
-    for (int i = 1; i < 26; i++)
+    for (int i = 1; i < 26; i++)  
         count[i] += count[i-1];
 
     for (int i = rozm - 1; i >= 0; i--) {
@@ -110,7 +110,7 @@ void Projekt::radixSort() {
 
     int m = getMaxLength();
 
-    for(int i = 0; i < m; i++)
+    for(int i = m-1; i >= 0; i--)
         countSort(i);
 
     cout<<"Done!!"<<endl;
