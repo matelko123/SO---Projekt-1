@@ -7,6 +7,7 @@
 #include <string>
 #include <algorithm>
 #include <cctype>
+#include <chrono>
 
 #define FileName "./src/_text.txt"
 #define DoneFileName "./src/_done.txt"
